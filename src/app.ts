@@ -1,9 +1,14 @@
 import express from 'express';
-// import helmet from 'helmet';
+import helmet from 'helmet';
+import compression from 'compression';
+import cors from 'cors';
+import morgan from 'morgan';
+
 
 import { Routes } from './interfaces/routes.interface';
-import { NODE_ENV, PORT } from './config';
-import { logger } from './utils/logger';
+import { NODE_ENV, PORT, LOG_FORMAT } from './config';
+import { logger, stream } from './utils/logger';
+import { ErrorMiddleware } from './middlewares/error.middleware';
 
 export class App {
   public app: express.Application;
@@ -15,9 +20,9 @@ export class App {
     this.env = NODE_ENV || 'development';
     this.port = PORT || 3000;
 
-    // this.initializeMiddlewares();
+    this.initializeMiddlewares();
     this.initializeRoutes(routes);
-    // this.initializeErrorHandling();
+    this.initializeErrorHandling();
   }
 
   public getServer() {
@@ -34,16 +39,14 @@ export class App {
   }
 
 
-  // private initializeMiddlewares() {
-  //   this.app.use(morgan(LOG_FORMAT, { stream }));
-  //   this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }));
-  //   this.app.use(hpp());
-  //   this.app.use(helmet());
-  //   this.app.use(compression());
-  //   this.app.use(express.json());
-  //   this.app.use(express.urlencoded({ extended: true }));
-  //   this.app.use(cookieParser());
-  // }
+  private initializeMiddlewares() {
+    this.app.use(morgan(LOG_FORMAT || 'tiny', { stream }));
+    this.app.use(cors());
+    this.app.use(helmet());
+    this.app.use(compression());
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+  }
 
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
@@ -51,7 +54,7 @@ export class App {
     });
   }
 
-  // private initializeErrorHandling() {
-  //   this.app.use(ErrorMiddleware);
-  // }
+  private initializeErrorHandling() {
+    this.app.use(ErrorMiddleware);
+  }
 };
