@@ -1,18 +1,21 @@
-# NodeJS Version 16
-FROM node:16.18-buster-slim
-
-# Copy Dir
-COPY . ./app
+# NodeJS Version 20 
+FROM node:20-alpine as build
 
 # Work to Dir
 WORKDIR /app
 
-# Install Node Package
-RUN npm install --legacy-peer-deps
+# Copy Dir
+COPY . .
+
+# Clean install node packages 
+RUN npm ci
+
+# Transpile typescript code into javascript
+RUN npm run build
 
 # Set Env
-ENV NODE_ENV production 
+ENV NODE_ENV=production 
 EXPOSE 3000
 
 # Cmd script
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/index.js"]
