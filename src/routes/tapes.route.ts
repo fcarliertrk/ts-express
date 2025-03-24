@@ -14,9 +14,9 @@ export class TapeRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:qrcode(\\w+)`, this.tape.getTapeByQrCode);
+    this.router.get(`${this.path}/:qrcode`, this.tape.getTapeByQrCode);
     // this.router.post(`${this.path}`, ValidationMiddleware(CreateTapeDto), this.tape.createTape);
     // this.router.put(`${this.path}/:id(\\d+)`, ValidationMiddleware(UpdateTapeDto), this.tape.updateTape);
-    this.router.delete(`${this.path}/:qrcode(\\w+)`, this.tape.deleteTape);
+    this.router.delete(`${this.path}/:qrcode`, this.tape.deleteTape);
   }
 }

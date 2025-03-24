@@ -1,3 +1,4 @@
 import { App } from './app';
-const app = new App([]);
+import { TapeRoute } from './routes/tapes.route';
+const app = new App([new TapeRoute()]);
 app.listen();
